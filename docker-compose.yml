@@ -1,0 +1,115 @@
+services:
+  # Products Service
+  products_service:
+    build:
+      context: ./services/products_service
+    container_name: lampashop_products_service
+    env_file:
+      - ./services/products_service/.env
+    ports:
+      - "4001:4001"
+    depends_on:
+      products_db:
+        condition: service_healthy
+    networks:
+      - lampashop_net
+
+  products_db:
+    image: postgres:16-alpine
+    container_name: lampashop_products_db
+    environment:
+      POSTGRES_USER: lampashop
+      POSTGRES_PASSWORD: lampashop
+      POSTGRES_DB: products_db
+    ports:
+      - "5435:5432"
+    volumes:
+      - products_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lampashop -d products_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - lampashop_net
+
+  # Carts & Orders Service
+  carts_orders_service:
+    build:
+      context: ./services/carts_orders_service
+    container_name: lampashop_carts_orders_service
+    env_file:
+      - ./services/carts_orders_service/.env
+    ports:
+      - "4002:4002"
+    depends_on:
+      carts_orders_db:
+        condition: service_healthy
+    networks:
+      - lampashop_net
+
+  carts_orders_db:
+    image: postgres:16-alpine
+    container_name: lampashop_carts_orders_db
+    environment:
+      POSTGRES_USER: lampashop
+      POSTGRES_PASSWORD: lampashop
+      POSTGRES_DB: carts_orders_db
+    ports:
+      - "5436:5432"
+    volumes:
+      - carts_orders_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lampashop -d carts_orders_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - lampashop_net
+
+  # Admin Service
+  admin_service:
+    build:
+      context: ./services/admin_service
+    container_name: lampashop_admin_service
+    env_file:
+      - ./services/admin_service/.env
+    ports:
+      - "4003:4003"
+    depends_on:
+      admin_service_db:
+        condition: service_healthy
+    networks:
+      - lampashop_net
+
+  admin_service_db:
+    image: postgres:16-alpine
+    container_name: lampashop_admin_service_db
+    environment:
+      POSTGRES_USER: lampashop
+      POSTGRES_PASSWORD: lampashop
+      POSTGRES_DB: admin_service_db
+    ports:
+      - "5437:5432"
+    volumes:
+      - admin_service_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lampashop -d admin_service_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - lampashop_net
+
+volumes:
+  products_db_data:
+  carts_orders_db_data:
+  admin_service_db_data:
+
+networks:
+  lampashop_net:
+    name: lampashop_net
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.77.77.0/24
