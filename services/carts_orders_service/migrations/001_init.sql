@@ -56,15 +56,15 @@ CREATE TABLE IF NOT EXISTS call_requests (
 );
 
 -- Indexes
-CREATE INDEX idx_carts_session_id ON carts(session_id);
-CREATE INDEX idx_cart_items_cart_id ON cart_items(cart_id);
-CREATE INDEX idx_cart_items_product_id ON cart_items(product_id);
-CREATE INDEX idx_orders_session_id ON orders(session_id);
-CREATE INDEX idx_orders_status ON orders(status);
-CREATE INDEX idx_orders_payment_status ON orders(payment_status);
-CREATE INDEX idx_order_items_order_id ON order_items(order_id);
-CREATE INDEX idx_call_requests_phone ON call_requests(phone);
-CREATE INDEX idx_call_requests_status ON call_requests(status);
+CREATE INDEX IF NOT EXISTS idx_carts_session_id ON carts(session_id);
+CREATE INDEX IF NOT EXISTS idx_cart_items_cart_id ON cart_items(cart_id);
+CREATE INDEX IF NOT EXISTS idx_cart_items_product_id ON cart_items(product_id);
+CREATE INDEX IF NOT EXISTS idx_orders_session_id ON orders(session_id);
+CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
+CREATE INDEX IF NOT EXISTS idx_orders_payment_status ON orders(payment_status);
+CREATE INDEX IF NOT EXISTS idx_order_items_order_id ON order_items(order_id);
+CREATE INDEX IF NOT EXISTS idx_call_requests_phone ON call_requests(phone);
+CREATE INDEX IF NOT EXISTS idx_call_requests_status ON call_requests(status);
 
 -- Triggers for updated_at
 CREATE OR REPLACE FUNCTION touch_carts_updated_at()
@@ -75,6 +75,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS carts_updated_at_trigger ON carts;
 CREATE TRIGGER carts_updated_at_trigger
 BEFORE UPDATE ON carts
 FOR EACH ROW
@@ -88,6 +89,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS orders_updated_at_trigger ON orders;
 CREATE TRIGGER orders_updated_at_trigger
 BEFORE UPDATE ON orders
 FOR EACH ROW
@@ -103,6 +105,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS orders_status_updated_at_trigger ON orders;
 CREATE TRIGGER orders_status_updated_at_trigger
 BEFORE UPDATE ON orders
 FOR EACH ROW

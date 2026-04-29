@@ -17,10 +17,10 @@ CREATE TABLE IF NOT EXISTS admin_refresh_tokens (
 );
 
 -- Indexes
-CREATE INDEX idx_admins_email ON admins(email);
-CREATE INDEX idx_admin_refresh_tokens_admin_id ON admin_refresh_tokens(admin_id);
-CREATE INDEX idx_admin_refresh_tokens_token ON admin_refresh_tokens(token);
-CREATE INDEX idx_admin_refresh_tokens_expires_at ON admin_refresh_tokens(expires_at);
+CREATE INDEX IF NOT EXISTS idx_admins_email ON admins(email);
+CREATE INDEX IF NOT EXISTS idx_admin_refresh_tokens_admin_id ON admin_refresh_tokens(admin_id);
+CREATE INDEX IF NOT EXISTS idx_admin_refresh_tokens_token ON admin_refresh_tokens(token);
+CREATE INDEX IF NOT EXISTS idx_admin_refresh_tokens_expires_at ON admin_refresh_tokens(expires_at);
 
 -- Trigger for updated_at
 CREATE OR REPLACE FUNCTION touch_admins_updated_at()
@@ -31,6 +31,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS admins_updated_at_trigger ON admins;
 CREATE TRIGGER admins_updated_at_trigger
 BEFORE UPDATE ON admins
 FOR EACH ROW
