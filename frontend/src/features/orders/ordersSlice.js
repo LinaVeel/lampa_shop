@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { createDeliveryOrder, loadOrdersBySession, trackOrder } from '../../api/orders'
+import { createDeliveryOrder, createPickupOrder, loadOrdersBySession, trackOrder } from '../../api/orders'
 
 const LAST_ORDER_STORAGE_KEY = 'lampashop_last_order'
 const LOCAL_ORDERS_STORAGE_KEY = 'lampashop_local_orders'
@@ -143,19 +143,35 @@ export const fetchOrdersBySession = createAsyncThunk(
 
 export const submitDeliveryOrder = createAsyncThunk(
   'orders/submitDeliveryOrder',
-  async ({ sessionId, recipientName, recipientPhone, deliveryAddress, paymentMethod, comment }) => {
+  async ({
+    sessionId,
+    recipientName,
+    recipientPhone,
+    deliveryType,
+    deliveryAddress,
+    paymentMethod,
+    comment,
+  }) => {
     const requestPayload = {
       session_id: sessionId,
       recipient_name: recipientName,
       recipient_phone: recipientPhone,
-      delivery_type: 'delivery',
-      delivery_address: deliveryAddress,
       payment_method: paymentMethod,
       comment,
     }
 
     try {
-      const order = await createDeliveryOrder(requestPayload)
+      const order =
+        deliveryType === 'pickup'
+          ? await createPickupOrder({
+              ...requestPayload,
+              pickup_point_id: null,
+            })
+          : await createDeliveryOrder({
+              ...requestPayload,
+              delivery_type: 'delivery',
+              delivery_address: deliveryAddress,
+            })
 
       if (typeof window !== 'undefined') {
         window.localStorage.setItem(LAST_ORDER_STORAGE_KEY, JSON.stringify(order))
@@ -165,6 +181,8 @@ export const submitDeliveryOrder = createAsyncThunk(
     } catch {
       const localOrder = createLocalOrder({
         ...requestPayload,
+        delivery_type: deliveryType,
+        delivery_address: deliveryType === 'delivery' ? deliveryAddress : null,
         items: loadJsonFromStorage('lampashop_local_cart_items', []),
       })
       return localOrder

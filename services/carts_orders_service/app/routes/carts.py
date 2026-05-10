@@ -1,6 +1,6 @@
 import uuid
 
-from fastapi import APIRouter
+from fastapi import APIRouter, status
 
 from app import db
 from app.errors import BadRequestError, NotFoundError
@@ -34,7 +34,7 @@ async def _get_cart_item(session_id: str, item_id: int) -> dict:
     return item
 
 
-@router.post("", response_model=CartResponse)
+@router.post("", response_model=CartResponse, status_code=status.HTTP_201_CREATED)
 async def create_cart() -> dict:
     session_id = str(uuid.uuid4())
     cart = await db.fetch_one(

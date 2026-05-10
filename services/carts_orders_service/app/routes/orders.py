@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 
 from app import db
 from app.deps import require_admin
@@ -142,7 +142,7 @@ async def _create_order_from_cart(
     return await _get_order(order["id"])
 
 
-@router.post("", response_model=OrderResponse)
+@router.post("", response_model=OrderResponse, status_code=status.HTTP_201_CREATED)
 async def create_order(payload: OrderFromCartCreate) -> dict:
     if payload.delivery_type != "delivery":
         raise BadRequestError("Use the pickup endpoint for pickup orders")
@@ -157,7 +157,7 @@ async def create_order(payload: OrderFromCartCreate) -> dict:
     )
 
 
-@router.post("/pickup", response_model=OrderResponse)
+@router.post("/pickup", response_model=OrderResponse, status_code=status.HTTP_201_CREATED)
 async def create_pickup_order(payload: PickupOrderCreate) -> dict:
     return await _create_order_from_cart(
         session_id=payload.session_id,

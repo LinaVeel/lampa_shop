@@ -45,6 +45,13 @@ export async function createDeliveryOrder(payload) {
   })
 }
 
+export async function createPickupOrder(payload) {
+  return requestJson(buildUrl(ORDERS_API_BASE, '/api/orders/pickup'), {
+    method: 'POST',
+    body: payload,
+  })
+}
+
 export async function trackOrder(payload) {
   return requestJson(buildUrl(ORDERS_API_BASE, '/api/orders/track'), {
     method: 'POST',

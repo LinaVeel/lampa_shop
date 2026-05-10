@@ -61,3 +61,25 @@ BEFORE UPDATE
 ON products
 FOR EACH ROW
 EXECUTE FUNCTION touch_products_updated_at();
+
+INSERT INTO categories (name, slug)
+VALUES
+  ('Дом и офис', 'home-office'),
+  ('Кухня', 'kitchen'),
+  ('Декор', 'decor'),
+  ('Умный свет', 'smart-light')
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO products (category_id, name, slug, description, price, stock_quantity, is_active)
+SELECT c.id, s.name, s.slug, s.description, s.price, s.stock_quantity, s.is_active
+FROM (
+  VALUES
+    ('home-office', 'A60 LED', 'a60-led', 'Теплая лампа для повседневного света', 79.00, 50, TRUE),
+    ('home-office', 'Filament Vintage', 'filament-vintage', 'Лампа с ретро-нитью накаливания', 109.00, 30, TRUE),
+    ('kitchen', 'Kitchen Daylight', 'kitchen-daylight', 'Яркий холодный свет для кухни', 89.00, 40, TRUE),
+    ('kitchen', 'Kitchen Linear', 'kitchen-linear', 'Линейная лампа для рабочей зоны', 149.00, 20, TRUE),
+    ('decor', 'Decor Globe', 'decor-globe', 'Декоративная лампа с мягким свечением', 129.00, 25, TRUE),
+    ('smart-light', 'Smart Color', 'smart-color', 'Умная лампа с управлением цветом', 199.00, 18, TRUE)
+) AS s(category_slug, name, slug, description, price, stock_quantity, is_active)
+JOIN categories c ON c.slug = s.category_slug
+ON CONFLICT (slug) DO NOTHING;

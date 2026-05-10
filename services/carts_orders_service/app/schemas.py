@@ -46,7 +46,7 @@ class PickupOrderCreate(BaseModel):
     session_id: str = Field(min_length=1, max_length=64)
     recipient_name: str = Field(min_length=1, max_length=150)
     recipient_phone: str = Field(min_length=1, max_length=30)
-    pickup_point_id: int = Field(gt=0)
+    pickup_point_id: Optional[int] = None
     payment_method: Literal["card_online", "cash_on_delivery"]
     comment: Optional[str] = None
 

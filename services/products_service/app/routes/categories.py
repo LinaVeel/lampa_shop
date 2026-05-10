@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, status
 from psycopg.errors import UniqueViolation
 
 from app.db import fetch_all, fetch_one
@@ -10,7 +10,7 @@ from app.schemas import CategoryCreate, CategoryUpdate
 router = APIRouter(prefix="/api/categories", tags=["Categories"])
 
 
-@router.post("/", dependencies=[Depends(require_admin)])
+@router.post("/", dependencies=[Depends(require_admin)], status_code=status.HTTP_201_CREATED)
 def create_category(payload: CategoryCreate):
     if payload.parent_id is not None:
         parent = fetch_one(

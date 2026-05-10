@@ -50,7 +50,7 @@ function filterMockProducts(filters = {}) {
 export async function loadCategories() {
   try {
     const payload = await requestJson(buildUrl(PRODUCTS_API_BASE, '/api/categories/', { limit: 100 }))
-    return payload?.data || []
+    return payload?.data?.length ? payload.data : toMockCategoryRows()
   } catch {
     return toMockCategoryRows()
   }
@@ -67,7 +67,7 @@ export async function loadProducts(filters = {}) {
       })
     )
 
-    return payload?.data || []
+    return payload?.data?.length ? payload.data : filterMockProducts(filters)
   } catch {
     return filterMockProducts(filters)
   }
@@ -76,7 +76,7 @@ export async function loadProducts(filters = {}) {
 export async function loadProductById(productId) {
   try {
     const payload = await requestJson(buildUrl(PRODUCTS_API_BASE, `/api/products/${productId}`))
-    return payload?.data || null
+    return payload?.data || toMockProductRows().find((product) => String(product.id) === String(productId)) || null
   } catch {
     return toMockProductRows().find((product) => String(product.id) === String(productId)) || null
   }

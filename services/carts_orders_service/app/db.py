@@ -23,16 +23,18 @@ async def close_pool() -> None:
 
 async def fetch_all(query: str, params: tuple = ()) -> List[Dict[str, Any]]:
     async with pool.connection() as conn:
-        async with conn.cursor() as cur:
+        async with conn.cursor(row_factory=dict_row) as cur:
             await cur.execute(query, params)
-            return await cur.fetchall()
+            rows = await cur.fetchall()
+            return [dict(row) for row in rows]
 
 
 async def fetch_one(query: str, params: tuple = ()) -> Optional[Dict[str, Any]]:
     async with pool.connection() as conn:
-        async with conn.cursor() as cur:
+        async with conn.cursor(row_factory=dict_row) as cur:
             await cur.execute(query, params)
-            return await cur.fetchone()
+            row = await cur.fetchone()
+            return dict(row) if row else None
 
 
 async def execute(query: str, params: tuple = ()) -> int:
