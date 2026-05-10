@@ -5,8 +5,6 @@ import { addItemToCart } from '../features/cart/cartSlice'
 import { fetchProductById } from '../features/products/productsSlice'
 import { selectProductDetailStatus, selectSelectedProduct } from '../store/selectors'
 import { formatRubles } from '../utils/money'
-import productStyles from '../styles/Product.module.css'
-import utilStyles from '../styles/utilities.module.css'
 
 export default function ProductPage() {
   const dispatch = useDispatch()
@@ -19,14 +17,14 @@ export default function ProductPage() {
   }, [dispatch, id])
 
   if (detailStatus === 'loading') {
-    return <div className={utilStyles.page_status}>Загружаем товар...</div>
+    return <div className="page-status">Загружаем товар...</div>
   }
 
   if (!product) {
     return (
-      <div className={utilStyles.page_status}>
+      <div className="page-status">
         <h1>Товар не найден</h1>
-        <Link to="/catalog" className={utilStyles.primary_button}>
+        <Link to="/catalog" className="primary-button">
           Вернуться в каталог
         </Link>
       </div>
@@ -34,24 +32,24 @@ export default function ProductPage() {
   }
 
   return (
-    <div className={productStyles.page}>
-      <section className={productStyles.header_card}>
-        <p className={utilStyles.eyebrow}>Карточка товара</p>
-        <h1 className={productStyles.header_title}>{product.name}</h1>
+    <div className="product-page">
+      <section className="page-header-card">
+        <p className="eyebrow">Карточка товара</p>
+        <h1>{product.name}</h1>
         <p>{product.categoryName}</p>
       </section>
 
-      <div className={productStyles.detail}>
+      <div className="product-detail">
         <img src={product.image} alt={product.name} />
         <div>
-          <p className={productStyles.description}>{product.description}</p>
-          <p style={{ color: 'var(--primary)', fontWeight: '900', fontSize: '20px', margin: '0' }}>{formatRubles(product.price)}</p>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', fontSize: '13px', color: 'var(--muted)', margin: '12px 0' }}>
+          <p>{product.description}</p>
+          <p className="price">{formatRubles(product.price)}</p>
+          <div className="product-meta">
             <span>{product.stock_quantity} в наличии</span>
             <span>{product.categoryName}</span>
           </div>
           <button
-            className={utilStyles.primary_button}
+            className="primary-button"
             onClick={() => dispatch(addItemToCart({ product, quantity: 1 }))}
           >
             Добавить в корзину

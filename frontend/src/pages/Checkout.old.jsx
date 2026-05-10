@@ -5,8 +5,6 @@ import { resetCartState } from '../features/cart/cartSlice'
 import { submitDeliveryOrder } from '../features/orders/ordersSlice'
 import { selectCartSessionId, selectCartTotal, selectCartViewItems, selectOrdersStatus } from '../store/selectors'
 import { formatRubles } from '../utils/money'
-import checkoutStyles from '../styles/Checkout.module.css'
-import utilStyles from '../styles/utilities.module.css'
 
 export default function Checkout() {
   const dispatch = useDispatch()
@@ -67,9 +65,9 @@ export default function Checkout() {
 
   if (items.length === 0) {
     return (
-      <div className={utilStyles.page_status}>
+      <div className="page-status">
         <p>Корзина пуста, добавьте товары перед оформлением.</p>
-        <button type="button" className={utilStyles.primary_button} onClick={() => navigate('/catalog')}>
+        <button type="button" className="primary-button" onClick={() => navigate('/catalog')}>
           Перейти в каталог
         </button>
       </div>
@@ -77,34 +75,34 @@ export default function Checkout() {
   }
 
   return (
-    <div className={checkoutStyles.page}>
-      <section className={checkoutStyles.header_card} style={{ marginBottom: '20px' }}>
-        <p className={utilStyles.eyebrow}>Оформление заказа</p>
+    <div className="checkout-page">
+      <section className="page-header-card">
+        <p className="eyebrow">Оформление заказа</p>
         <h1>Заполните контакты, адрес и комментарий</h1>
         <p>Данные уйдут в orders service, который создаст заказ из вашей корзины.</p>
       </section>
 
-      <section className={checkoutStyles.shell}>
-        <form onSubmit={submit} className={checkoutStyles.form}>
-          <div className={checkoutStyles.field_grid}>
+      <section className="checkout-shell">
+        <form onSubmit={submit} className="checkout checkout-form-card">
+          <div className="field-grid">
             <div>
-              <label className={utilStyles.field_label}>Имя</label>
-              <input name="name" value={form.name} onChange={handleChange} required className={utilStyles.text_input} />
+              <label className="field-label">Имя</label>
+              <input name="name" value={form.name} onChange={handleChange} required className="text-input" />
             </div>
             <div>
-              <label className={utilStyles.field_label}>Телефон</label>
-              <input name="phone" value={form.phone} onChange={handleChange} required className={utilStyles.text_input} />
+              <label className="field-label">Телефон</label>
+              <input name="phone" value={form.phone} onChange={handleChange} required className="text-input" />
             </div>
           </div>
 
-          <div className={checkoutStyles.field_grid}>
+          <div className="field-grid">
             <div>
-              <label className={utilStyles.field_label}>Адрес доставки</label>
-              <input name="address" value={form.address} onChange={handleChange} required className={utilStyles.text_input} placeholder="Москва, ул. ..." />
+              <label className="field-label">Адрес доставки</label>
+              <input name="address" value={form.address} onChange={handleChange} required className="text-input" placeholder="Москва, ул. ..." />
             </div>
             <div>
-              <label className={utilStyles.field_label}>Оплата</label>
-              <select name="payment" value={form.payment} onChange={handleChange} className={utilStyles.text_input}>
+              <label className="field-label">Оплата</label>
+              <select name="payment" value={form.payment} onChange={handleChange} className="text-input">
                 <option value="card_online">Карта онлайн</option>
                 <option value="cash_on_delivery">Наличные при получении</option>
               </select>
@@ -112,33 +110,33 @@ export default function Checkout() {
           </div>
 
           <div>
-            <label className={utilStyles.field_label}>Комментарий к заказу</label>
+            <label className="field-label">Комментарий к заказу</label>
             <textarea
               name="comment"
               value={form.comment}
               onChange={handleChange}
-              className={`${utilStyles.text_input} ${utilStyles.textarea}`}
+              className="text-input textarea"
               rows="5"
               placeholder="Например: позвонить перед доставкой"
             />
           </div>
 
-          {error && <div className={catalogStyles.track_result}>{error}</div>}
+          {error && <div className="track-result">{error}</div>}
 
-          <div className={checkoutStyles.summary}>
+          <div className="checkout-summary">
             <div>
-              <span className={checkoutStyles.summary_label}>Итого</span>
-              <div className={checkoutStyles.summary_total}>{formatRubles(total)}</div>
+              <span className="summary-label">Итого</span>
+              <div className="summary-total">{formatRubles(total)}</div>
             </div>
-            <button type="submit" className={utilStyles.primary_button} disabled={orderStatus === 'loading'}>
+            <button type="submit" className="primary-button" disabled={orderStatus === 'loading'}>
               {orderStatus === 'loading' ? 'Оформляем...' : 'Подтвердить заказ'}
             </button>
           </div>
         </form>
 
-        <aside className={checkoutStyles.info_card}>
-          <p className={utilStyles.eyebrow}>Что попадёт в заказ</p>
-          <ul className={catalogStyles.contact_list}>
+        <aside className="checkout-info-card">
+          <p className="eyebrow">Что попадёт в заказ</p>
+          <ul className="contact-list">
             <li>Имя и телефон для связи</li>
             <li>Адрес доставки</li>
             <li>Комментарий к заказу</li>

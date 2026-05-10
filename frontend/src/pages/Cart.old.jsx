@@ -4,8 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { clearCartOnServer, removeItemFromCart, resetCartState, updateItemQuantity } from '../features/cart/cartSlice'
 import { selectCartCount, selectCartTotal, selectCartViewItems } from '../store/selectors'
 import { formatRubles } from '../utils/money'
-import cartStyles from '../styles/Cart.module.css'
-import utilStyles from '../styles/utilities.module.css'
 
 export default function CartPage() {
   const dispatch = useDispatch()
@@ -16,10 +14,10 @@ export default function CartPage() {
 
   if (count === 0) {
     return (
-      <div className={utilStyles.page_status}>
+      <div className="page-status">
         <h1>Корзина</h1>
         <p>Корзина пуста.</p>
-        <Link to="/catalog" className={utilStyles.primary_button}>
+        <Link to="/catalog" className="primary-button">
           Перейти в каталог
         </Link>
       </div>
@@ -27,14 +25,14 @@ export default function CartPage() {
   }
 
   return (
-    <div>
-      <section className={cartStyles.header_card} style={{ marginBottom: '20px', marginTop: '28px' }}>
-        <p className={utilStyles.eyebrow}>Корзина</p>
+    <div className="checkout-page">
+      <section className="page-header-card">
+        <p className="eyebrow">Корзина</p>
         <h1>Выберите количество и переходите к оформлению</h1>
         <p>Корзина синхронизируется с carts service через fetch.</p>
       </section>
 
-      <table className={cartStyles.table}>
+      <table className="cart-table">
         <thead>
           <tr>
             <th>Товар</th>
@@ -48,7 +46,7 @@ export default function CartPage() {
           {items.map((item) => (
             <tr key={item.id}>
               <td>
-                <div className={cartStyles.item_cell}>
+                <div className="cart-item-cell">
                   <img src={item.image} alt={item.productName} />
                   <div>
                     <strong>{item.productName}</strong>
@@ -59,7 +57,7 @@ export default function CartPage() {
               <td>{formatRubles(item.unitPrice)}</td>
               <td>
                 <input
-                  className={`${utilStyles.text_input} ${cartStyles.quantity_input}`}
+                  className="text-input cart-quantity-input"
                   type="number"
                   min="1"
                   value={item.quantity}
@@ -75,7 +73,7 @@ export default function CartPage() {
               </td>
               <td>{formatRubles(item.lineTotal)}</td>
               <td>
-                <button type="button" className={utilStyles.link_button} onClick={() => dispatch(removeItemFromCart(item.id))}>
+                <button type="button" className="link-button" onClick={() => dispatch(removeItemFromCart(item.id))}>
                   Удалить
                 </button>
               </td>
@@ -84,12 +82,12 @@ export default function CartPage() {
         </tbody>
       </table>
 
-      <div className={cartStyles.actions}>
-        <div style={{ fontSize: '18px', fontWeight: '700' }}>Итого: {formatRubles(total)}</div>
-        <div className={cartStyles.action_buttons}>
+      <div className="cart-actions">
+        <div className="total">Итого: {formatRubles(total)}</div>
+        <div className="cart-actions-buttons">
           <button
             type="button"
-            className={utilStyles.ghost_button}
+            className="ghost-button"
             onClick={() => {
               dispatch(clearCartOnServer())
               dispatch(resetCartState())
@@ -97,7 +95,7 @@ export default function CartPage() {
           >
             Очистить
           </button>
-          <button type="button" className={utilStyles.primary_button} onClick={() => navigate('/checkout')}>
+          <button type="button" className="primary-button" onClick={() => navigate('/checkout')}>
             Оформить заказ
           </button>
         </div>

@@ -1,0 +1,125 @@
+.button_active {
+	box-shadow: 0 0 0 4px rgba(15, 76, 129, 0.14);
+	transform: translateY(-1px) scale(0.99);
+}
+
+.ghost_button,
+.primary_button,
+.link_button,
+.chip {
+	border: 0;
+	cursor: pointer;
+	border-radius: 999px;
+	transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.ghost_button,
+.primary_button,
+.link_button {
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-height: 48px;
+	padding: 0 18px;
+}
+
+.ghost_button {
+	background: var(--primary-soft);
+	color: var(--primary);
+	font-weight: 700;
+}
+
+.primary_button {
+	background: linear-gradient(135deg, #0f4c81, #1d6fb1);
+	color: white;
+	font-weight: 700;
+}
+
+.ghost_button:hover,
+.primary_button:hover,
+.chip:hover,
+.link_button:hover {
+	transform: translateY(-1px);
+}
+
+.link_button {
+	background: transparent;
+	color: var(--primary);
+	padding-inline: 0;
+	min-height: auto;
+}
+
+.full_width { width: 100%; }
+
+.eyebrow {
+	margin: 0 0 10px;
+	text-transform: uppercase;
+	letter-spacing: 0.15em;
+	color: var(--primary);
+	font-size: 12px;
+	font-weight: 800;
+}
+
+.chip {
+	background: #eef2f7;
+	color: var(--muted);
+	padding: 10px 14px;
+}
+
+.active {
+	background: var(--primary);
+	color: white;
+}
+
+.chip.active {
+	background: var(--primary);
+	color: white;
+}
+
+.field_label {
+	font-size: 14px;
+	font-weight: 700;
+	color: var(--muted);
+}
+
+.text_input {
+	width: 100%;
+	min-height: 48px;
+	border-radius: 16px;
+	border: 1px solid var(--border);
+	background: #fafbfd;
+	padding: 0 16px;
+	outline: none;
+	color: var(--text);
+}
+
+.text_input:focus {
+	border-color: rgba(15, 76, 129, 0.45);
+	box-shadow: 0 0 0 4px rgba(15, 76, 129, 0.08);
+}
+
+.textarea {
+	resize: vertical;
+	min-height: 140px;
+	padding-top: 14px;
+}
+
+.page_status {
+	min-height: 240px;
+	display: grid;
+	place-items: center;
+	gap: 14px;
+	padding: 28px;
+	text-align: center;
+}
+
+.success_box {
+	padding: 14px 16px;
+	border-radius: 16px;
+	background: #eefaf2;
+	color: #25603a;
+	border: 1px solid var(--border);
+	box-shadow: var(--shadow);
+}

@@ -205,14 +205,14 @@ export default function Catalog() {
             </select>
           </div>
 
-          <div className={catalogStyles.panel_block}>
-            <p className={utilStyles.field_label}>Популярные категории</p>
-            <div className={catalogStyles.chip_list}>
+          <div className="panel-block">
+            <p className="field-label">Популярные категории</p>
+            <div className="chip-list">
               {categories.map((item) => (
                 <button
                   key={item.id}
                   type="button"
-                  className={`${utilStyles.chip} ${String(categoryId) === String(item.id) ? utilStyles.active : ''}`}
+                  className={`chip ${String(categoryId) === String(item.id) ? 'active' : ''}`}
                   onClick={() => updateParams({ categoryId: String(item.id) })}
                 >
                   {item.name}
@@ -221,29 +221,29 @@ export default function Catalog() {
             </div>
           </div>
 
-          <div className={utilStyles.success_box} style={{ padding: '18px', borderRadius: '12px', color: 'var(--text)' }}>
-            <p style={{ margin: '0 0 8px', color: 'var(--text)', fontWeight: '800' }}>Нужна помощь с выбором?</p>
-            <p style={{ color: 'var(--muted)' }}>Оставьте заявку, и мы перезвоним в рабочее время.</p>
-            <Link to="/callback" className={`${utilStyles.primary_button} ${utilStyles.full_width}`} style={{ marginTop: '12px' }}>
+          <div className="callback-card">
+            <p className="callback-title">Нужна помощь с выбором?</p>
+            <p>Оставьте заявку, и мы перезвоним в рабочее время.</p>
+            <Link to="/callback" className="primary-button full-width">
               Заказать звонок
             </Link>
           </div>
         </aside>
 
-        <div className={catalogStyles.content}>
-          <div className={catalogStyles.toolbar}>
+        <div className="catalog-content">
+          <div className="catalog-toolbar">
             <p>
               Найдено товаров: <strong>{products.length}</strong>
             </p>
-            <button type="button" className={utilStyles.link_button} onClick={() => setSearchParams({})}>
+            <button type="button" className="link-button" onClick={() => setSearchParams({})}>
               Сбросить фильтры
             </button>
           </div>
 
-          {productsError && <div className={catalogStyles.track_result}>{productsError}</div>}
-          {productsStatus === 'loading' && <div className={catalogStyles.track_result}>Загружаем каталог...</div>}
+          {productsError && <div className="track-result">{productsError}</div>}
+          {productsStatus === 'loading' && <div className="track-result">Загружаем каталог...</div>}
 
-          <div className={catalogStyles.grid}>
+          <div className="grid">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -251,9 +251,9 @@ export default function Catalog() {
         </div>
       </section>
 
-      <section className={catalogStyles.track_section} id="track-order">
-        <div className={catalogStyles.track_copy}>
-          <p className={utilStyles.eyebrow}>Отследить заказ</p>
+      <section className="track-section" id="track-order">
+        <div className="track-copy">
+          <p className="eyebrow">Отследить заказ</p>
           <h2>Проверьте статус заказа по номеру и телефону</h2>
           <p>
             Введите номер заказа и телефон, указанный при оформлении. Данные проверяются
@@ -261,25 +261,25 @@ export default function Catalog() {
           </p>
         </div>
 
-        <form className={catalogStyles.track_form} onSubmit={handleTrackSubmit}>
-          <label className={utilStyles.field_label} htmlFor="track-order-number">
+        <form className="track-form" onSubmit={handleTrackSubmit}>
+          <label className="field-label" htmlFor="track-order-number">
             Номер заказа
           </label>
           <input
             id="track-order-number"
-            className={utilStyles.text_input}
+            className="text-input"
             name="orderNumber"
             value={trackForm.orderNumber}
             onChange={handleTrackChange}
             placeholder="например, 10254"
           />
 
-          <label className={utilStyles.field_label} htmlFor="track-phone">
+          <label className="field-label" htmlFor="track-phone">
             Телефон
           </label>
           <input
             id="track-phone"
-            className={utilStyles.text_input}
+            className="text-input"
             name="phone"
             value={trackForm.phone}
             onChange={handleTrackChange}
@@ -288,39 +288,38 @@ export default function Catalog() {
 
           <button
             type="submit"
-            className={utilStyles.primary_button} 
-            style={{ width: '100%' }}
+            className="primary-button full-width"
             disabled={trackStatus === 'loading'}
           >
             {trackStatus === 'loading' ? 'Ищем...' : 'Отследить'}
           </button>
 
-          {trackResult && <div className={catalogStyles.track_result}>{trackResult}</div>}
+          {trackResult && <div className="track-result">{trackResult}</div>}
         </form>
       </section>
 
-      <section className={catalogStyles.about_contact_grid}>
-        <article className={catalogStyles.info_card}>
-          <p className={utilStyles.eyebrow}>О нас</p>
-          <h2 className={catalogStyles.info_title}>Мы подбираем лампы под каждый интерьер</h2>
-          <p className={catalogStyles.info_description}>
+      <section className="about-contact-grid">
+        <article className="info-card">
+          <p className="eyebrow">О нас</p>
+          <h2>Мы подбираем лампы под каждый интерьер</h2>
+          <p>
             Lampashop — это витрина лампочек для дома, кухни, витрин и декоративных
             светильников. Мы делаем акцент на качественных фото, понятной навигации и
             быстром выборе.
           </p>
         </article>
 
-        <article className={catalogStyles.info_card}>
-          <p className={utilStyles.eyebrow}>Контактные данные</p>
-          <h2 className={catalogStyles.info_title}>Свяжитесь с нами любым удобным способом</h2>
-          <ul className={catalogStyles.contact_list}>
+        <article className="info-card">
+          <p className="eyebrow">Контактные данные</p>
+          <h2>Свяжитесь с нами любым удобным способом</h2>
+          <ul className="contact-list">
             <li>Адрес: Москва, ул. Светлая, д. 12</li>
             <li>Телефон: +7 (495) 123-45-67</li>
             <li>Часы работы: ежедневно 09:00–21:00</li>
           </ul>
-          <div className={catalogStyles.social_links}>
+          <div className="social-links">
             <a href="https://t.me/" target="_blank" rel="noreferrer" aria-label="Telegram">
-              <span className={`${catalogStyles.social_icon} ${catalogStyles.telegram}`}>✈</span>
+              <span className="social-icon telegram">✈</span>
             </a>
             <a
               href="https://instagram.com/"
@@ -328,13 +327,13 @@ export default function Catalog() {
               rel="noreferrer"
               aria-label="Instagram"
             >
-              <span className={`${catalogStyles.social_icon} ${catalogStyles.instagram}`}>◎</span>
+              <span className="social-icon instagram">◎</span>
             </a>
           </div>
         </article>
       </section>
 
-      <footer className={catalogStyles.site_footer}>
+      <footer className="site-footer">
         <div>
           <strong>Lampashop</strong>
           <p>Москва, ул. Светлая, д. 12</p>
@@ -342,9 +341,9 @@ export default function Catalog() {
         </div>
         <div>
           <p>Телефон: +7 (495) 123-45-67</p>
-          <div className={catalogStyles.social_links}>
+          <div className="social-links">
             <a href="https://t.me/" target="_blank" rel="noreferrer" aria-label="Telegram">
-              <span className={`${catalogStyles.social_icon} ${catalogStyles.telegram}`}>✈</span>
+              <span className="social-icon telegram">✈</span>
             </a>
             <a
               href="https://instagram.com/"
@@ -352,13 +351,9 @@ export default function Catalog() {
               rel="noreferrer"
               aria-label="Instagram"
             >
-              <span className={`${catalogStyles.social_icon} ${catalogStyles.instagram}`}>◎</span>
+              <span className="social-icon instagram">◎</span>
             </a>
           </div>
-        </div>
-        <div style={{ textAlign: 'right' }}>
-          <strong>© 2024 Lampashop</strong>
-          <p>Все права защищены</p>
         </div>
       </footer>
     </div>
