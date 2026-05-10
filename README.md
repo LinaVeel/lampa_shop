@@ -1,4 +1,4 @@
-# 🏮 Lampashop — магазин лампочек
+# Lampashop — магазин лампочек
 
 Полнофункциональная система с микросервисной архитектурой: React фронтенд + FastAPI микросервисы + PostgreSQL БД.
 
@@ -6,7 +6,45 @@
 -  **Модульный дизайн** — React компоненты с CSS Modules
 -  **Микросервисы** — разделение ответственности (товары, заказы, админка)
 -  **Docker Compose** — одна команда для развертывания всего стека
--  **Vite сборка** — быстрая разработка и оптимизированный бил
+-  **Vite сборка** — быстрая разработка 
+
+## Структура проекта
+
+```
+lampashop/
+├── docker-compose.yml
+├── README.md
+└── services/
+    ├── products_service/
+    │   ├── app/
+    │   │   ├── main.py
+    │   │   ├── config.py
+    │   │   ├── db.py
+    │   │   ├── routes/
+    │   │   └── ...
+    │   ├── migrations/
+    │   ├── Dockerfile
+    │   └── requirements.txt
+    ├── carts_orders_service/
+    │   ├── app/
+    │   ├── migrations/
+    │   └── ...
+    └── admin_service/
+        ├── app/
+        ├── migrations/
+        └── ...
+```
+
+## Технологический стек
+
+- **Framework**: FastAPI 0.115.6
+- **Server**: Uvicorn
+- **Database**: PostgreSQL 16
+- **ORM/Query**: Raw SQL + psycopg3
+- **Auth**: JWT токены (admin_service)
+- **Validation**: Pydantic
+- **Containerization**: Docker + Docker Compose
+- **Python**: 3.12-slim
 
 ---
 
@@ -186,8 +224,6 @@ docker compose down -v
 docker compose up --build -d
 ```
 
-### ✅ Локальное развитие работает медленно
-Убедитесь, что Docker Desktop имеет достаточно ресурсов (4+ CPU, 4+ GB RAM)
 
 ---
 
@@ -224,81 +260,5 @@ docker compose up --build -d
 - `GET /auth/{admin_id}` — получить профиль админа
 - `PATCH /auth/{admin_id}/active` — изменить статус
 
-## Тестирование
-
-### Products Service
-
-```bash
-# Создать категорию
-curl -X POST http://localhost:4001/api/categories \
-  -H "Content-Type: application/json" \
-  -H "x-admin-api-key: change-me" \
-  -d '{"name":"Electronics","description":"Tech products"}'
-
-# Получить категории
-curl http://localhost:4001/api/categories
 ```
 
-### Carts & Orders Service
-
-```bash
-# Создать корзину
-curl -X POST http://localhost:4002/api/carts
-
-# Получить корзину (используйте session_id из ответа выше)
-curl http://localhost:4002/api/carts/{session_id}
-```
-
-### Admin Service
-
-```bash
-# Вход (default: admin@lampashop.ru / admin@123)
-curl -X POST http://localhost:4003/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "admin@lampashop.ru",
-    "password": "admin@123"
-  }'
-
-# Используйте access_token в последующих запросах
-curl http://localhost:4003/api/auth/me \
-  -H "Authorization: Bearer {access_token}"
-```
-
-## Структура проекта
-
-```
-lampashop/
-├── docker-compose.yml
-├── README.md
-└── services/
-    ├── products_service/
-    │   ├── app/
-    │   │   ├── main.py
-    │   │   ├── config.py
-    │   │   ├── db.py
-    │   │   ├── routes/
-    │   │   └── ...
-    │   ├── migrations/
-    │   ├── Dockerfile
-    │   └── requirements.txt
-    ├── carts_orders_service/
-    │   ├── app/
-    │   ├── migrations/
-    │   └── ...
-    └── admin_service/
-        ├── app/
-        ├── migrations/
-        └── ...
-```
-
-## Технологический стек
-
-- **Framework**: FastAPI 0.115.6
-- **Server**: Uvicorn
-- **Database**: PostgreSQL 16
-- **ORM/Query**: Raw SQL + psycopg3
-- **Auth**: JWT токены (admin_service)
-- **Validation**: Pydantic
-- **Containerization**: Docker + Docker Compose
-- **Python**: 3.12-slim
