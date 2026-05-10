@@ -1,14 +1,34 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useLocation, Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectCurrentOrder } from '../store/selectors'
 import { formatRubles } from '../utils/money'
 import utilStyles from '../styles/utilities.module.css'
 
+const STATUS_LABELS = {
+  pending: 'Ожидает обработки',
+  processing: 'В обработке',
+  shipped: 'Отправлен',
+  delivered: 'Доставлен',
+  cancelled: 'Отменен',
+}
+
+const DELIVERY_TYPE_LABELS = {
+  delivery: 'Доставка по адресу',
+  pickup: 'Самовывоз',
+}
+
 export default function Confirmation() {
   const location = useLocation()
   const reduxOrder = useSelector(selectCurrentOrder)
   const order = location.state?.order || reduxOrder
+  const [copied, setCopied] = useState(false)
+
+  function handleCopyOrderId() {
+    navigator.clipboard.writeText(String(order.id))
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   if (!order) {
     return (
@@ -28,6 +48,14 @@ export default function Confirmation() {
         <p className={utilStyles.eyebrow} style={{ color: '#25603a' }}>Успешно</p>
         <h1 style={{ margin: '0 0 10px', color: '#25603a' }}>Заказ #{order.id} принят!</h1>
         <p>Спасибо за покупку. Вы получите уведомление об обновлении статуса.</p>
+        <button
+          type="button"
+          className={utilStyles.primary_button}
+          onClick={handleCopyOrderId}
+          style={{ marginTop: '16px', minWidth: '200px' }}
+        >
+          {copied ? '✓ Скопировано' : 'Копировать номер заказа'}
+        </button>
       </section>
 
       <section style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '24px', boxShadow: 'var(--shadow)', padding: '24px', marginBottom: '24px' }}>
@@ -44,9 +72,15 @@ export default function Confirmation() {
             <strong>{order.recipient_phone || 'N/A'}</strong>
           </div>
           <div>
-            <span style={{ display: 'block', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--muted)', marginBottom: '6px' }}>Адрес доставки</span>
-            <strong>{order.delivery_address || 'N/A'}</strong>
+            <span style={{ display: 'block', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--muted)', marginBottom: '6px' }}>Способ получения</span>
+            <strong>{DELIVERY_TYPE_LABELS[order.delivery_type] || order.delivery_type || 'N/A'}</strong>
           </div>
+          {order.delivery_type === 'delivery' && (
+            <div>
+              <span style={{ display: 'block', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--muted)', marginBottom: '6px' }}>Адрес доставки</span>
+              <strong>{order.delivery_address || 'N/A'}</strong>
+            </div>
+          )}
           <div>
             <span style={{ display: 'block', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--muted)', marginBottom: '6px' }}>Метод оплаты</span>
             <strong>{order.payment_method === 'card_online' ? 'Карта онлайн' : 'Наличные'}</strong>
@@ -62,7 +96,7 @@ export default function Confirmation() {
 
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: '20px' }}>
           <span style={{ display: 'block', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--muted)', marginBottom: '6px' }}>Статус</span>
-          <strong style={{ fontSize: '18px' }}>{order.status || 'pending'}</strong>
+          <strong style={{ fontSize: '18px' }}>{STATUS_LABELS[order.status] || order.status || 'Ожидает обработки'}</strong>
         </div>
       </section>
 

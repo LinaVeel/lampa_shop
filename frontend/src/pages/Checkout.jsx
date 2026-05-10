@@ -5,6 +5,7 @@ import { resetCartState } from '../features/cart/cartSlice'
 import { submitDeliveryOrder } from '../features/orders/ordersSlice'
 import { selectCartSessionId, selectCartTotal, selectCartViewItems, selectOrdersStatus } from '../store/selectors'
 import { formatRubles } from '../utils/money'
+import catalogStyles from '../styles/Catalog.module.css'
 import checkoutStyles from '../styles/Checkout.module.css'
 import utilStyles from '../styles/utilities.module.css'
 
@@ -18,6 +19,7 @@ export default function Checkout() {
   const [form, setForm] = useState({
     name: '',
     phone: '',
+    deliveryType: 'delivery', // 'delivery' или 'pickup'
     address: '',
     comment: '',
     payment: 'card_online',
@@ -44,7 +46,8 @@ export default function Checkout() {
           sessionId,
           recipientName: form.name,
           recipientPhone: form.phone,
-          deliveryAddress: form.address,
+          deliveryType: form.deliveryType,
+          deliveryAddress: form.deliveryType === 'delivery' ? form.address : null,
           paymentMethod: form.payment,
           comment: form.comment,
         })
@@ -81,7 +84,6 @@ export default function Checkout() {
       <section className={checkoutStyles.header_card} style={{ marginBottom: '20px' }}>
         <p className={utilStyles.eyebrow}>Оформление заказа</p>
         <h1>Заполните контакты, адрес и комментарий</h1>
-        <p>Данные уйдут в orders service, который создаст заказ из вашей корзины.</p>
       </section>
 
       <section className={checkoutStyles.shell}>
@@ -99,8 +101,11 @@ export default function Checkout() {
 
           <div className={checkoutStyles.field_grid}>
             <div>
-              <label className={utilStyles.field_label}>Адрес доставки</label>
-              <input name="address" value={form.address} onChange={handleChange} required className={utilStyles.text_input} placeholder="Москва, ул. ..." />
+              <label className={utilStyles.field_label}>Способ получения</label>
+              <select name="deliveryType" value={form.deliveryType} onChange={handleChange} className={utilStyles.text_input}>
+                <option value="delivery">Доставка по адресу</option>
+                <option value="pickup">Самовывоз</option>
+              </select>
             </div>
             <div>
               <label className={utilStyles.field_label}>Оплата</label>
@@ -110,6 +115,13 @@ export default function Checkout() {
               </select>
             </div>
           </div>
+
+          {form.deliveryType === 'delivery' && (
+            <div>
+              <label className={utilStyles.field_label}>Адрес доставки</label>
+              <input name="address" value={form.address} onChange={handleChange} required className={utilStyles.text_input} placeholder="Москва, ул. ..." />
+            </div>
+          )}
 
           <div>
             <label className={utilStyles.field_label}>Комментарий к заказу</label>

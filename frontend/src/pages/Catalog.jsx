@@ -19,6 +19,14 @@ import {
 import catalogStyles from '../styles/Catalog.module.css'
 import utilStyles from '../styles/utilities.module.css'
 
+const STATUS_LABELS = {
+  pending: 'Ожидает обработки',
+  processing: 'В обработке',
+  shipped: 'Отправлен',
+  delivered: 'Доставлен',
+  cancelled: 'Отменен',
+}
+
 export default function Catalog() {
   const dispatch = useDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
@@ -67,8 +75,9 @@ export default function Catalog() {
 
   useEffect(() => {
     if (trackedOrder) {
+      const russianStatus = STATUS_LABELS[trackedOrder.status] || trackedOrder.status
       setTrackResult(
-        `Заказ ${trackedOrder.id} найден. Статус: ${trackedOrder.status}. Трек-номер: ${
+        `Заказ ${trackedOrder.id} найден. Статус: ${russianStatus}. Трек-номер: ${
           trackedOrder.tracking_number || 'еще не присвоен'
         }.`
       )
@@ -144,21 +153,6 @@ export default function Catalog() {
           <Link to="/callback" className={utilStyles.primary_button}>
             Оставить заявку на звонок
           </Link>
-        </div>
-      </section>
-
-      <section className={catalogStyles.hero_stats}>
-        <div className={catalogStyles.stat_card}>
-          <span className={catalogStyles.stat_label}>В корзине</span>
-          <strong>{cartCount} товаров</strong>
-        </div>
-        <div className={catalogStyles.stat_card}>
-          <span className={catalogStyles.stat_label}>Категорий</span>
-          <strong>{categories.length || 0}</strong>
-        </div>
-        <div className={catalogStyles.stat_card}>
-          <span className={catalogStyles.stat_label}>Статус каталога</span>
-          <strong>{productsStatus === 'loading' ? 'Загрузка' : 'Готово'}</strong>
         </div>
       </section>
 
@@ -255,10 +249,6 @@ export default function Catalog() {
         <div className={catalogStyles.track_copy}>
           <p className={utilStyles.eyebrow}>Отследить заказ</p>
           <h2>Проверьте статус заказа по номеру и телефону</h2>
-          <p>
-            Введите номер заказа и телефон, указанный при оформлении. Данные проверяются
-            через orders service по fetch.
-          </p>
         </div>
 
         <form className={catalogStyles.track_form} onSubmit={handleTrackSubmit}>
@@ -334,33 +324,6 @@ export default function Catalog() {
         </article>
       </section>
 
-      <footer className={catalogStyles.site_footer}>
-        <div>
-          <strong>Lampashop</strong>
-          <p>Москва, ул. Светлая, д. 12</p>
-          <p>Часы работы: 09:00–21:00</p>
-        </div>
-        <div>
-          <p>Телефон: +7 (495) 123-45-67</p>
-          <div className={catalogStyles.social_links}>
-            <a href="https://t.me/" target="_blank" rel="noreferrer" aria-label="Telegram">
-              <span className={`${catalogStyles.social_icon} ${catalogStyles.telegram}`}>✈</span>
-            </a>
-            <a
-              href="https://instagram.com/"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Instagram"
-            >
-              <span className={`${catalogStyles.social_icon} ${catalogStyles.instagram}`}>◎</span>
-            </a>
-          </div>
-        </div>
-        <div style={{ textAlign: 'right' }}>
-          <strong>© 2024 Lampashop</strong>
-          <p>Все права защищены</p>
-        </div>
-      </footer>
     </div>
   )
 }
